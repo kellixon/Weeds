@@ -1,7 +1,11 @@
 package yamahari.weeds;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -12,12 +16,15 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import yamahari.weeds.blocks.BlockDryFarmland;
+import yamahari.weeds.lists.BlockList;
+import yamahari.weeds.lists.ItemList;
 
 import java.util.Random;
 
-@Mod("agriculturecraft")
+@Mod("weeds")
 public class Weeds {
-    public static final String modId = "agriculturecraft";
+    public static final String modId = "weeds";
     public static Weeds instance;
     public static final Logger logger = LogManager.getLogger(modId);
 
@@ -44,7 +51,7 @@ public class Weeds {
         public static void registerItems(final RegistryEvent.Register<Item> event) {
             logger.info("registerItems");
             event.getRegistry().registerAll(
-
+                ItemList.dry_farmland = new ItemBlock(BlockList.dry_farmland, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(BlockList.dry_farmland.getRegistryName())
             );
         }
 
@@ -52,7 +59,7 @@ public class Weeds {
         public static void registerBlocks(final RegistryEvent.Register<Block> event) {
             logger.info("registerBlocks");
             event.getRegistry().registerAll(
-
+                BlockList.dry_farmland = new BlockDryFarmland(Block.Properties.create(Material.GROUND).needsRandomTick().hardnessAndResistance(0.6F).sound(SoundType.GROUND)).setRegistryName(makeLocation("dry_farmland"))
             );
         }
 
