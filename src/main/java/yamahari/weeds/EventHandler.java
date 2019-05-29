@@ -1,22 +1,20 @@
 package yamahari.weeds;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBush;
+import net.minecraft.block.BlockAttachedStem;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockStem;
-import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemHoe;
-import net.minecraft.item.ItemSeeds;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.BonemealEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -46,12 +44,9 @@ public class EventHandler {
         BlockPos pos = event.getPos();
 
         event.setResult(Event.Result.DEFAULT);
-
-        if(block instanceof BlockCrops) {
-            // Weeds.logger.info("is instance of BlockCrops");
+        if(block instanceof BlockCrops || block instanceof BlockStem) {
             IBlockState soil = world.getBlockState(pos.down());
             Block soilBlock = soil.getBlock();
-
             if(soilBlock == BlockList.dry_farmland) {
                 if(!soil.get(((BlockDryFarmland)soilBlock).getNutrition())) {
                     event.setResult(Event.Result.DENY);
@@ -68,12 +63,32 @@ public class EventHandler {
         BlockPos pos = event.getPos();
 
         if(block instanceof BlockCrops) {
-            if(blockState.get(((BlockCrops)block).getAgeProperty()) == ((BlockCrops)block).getMaxAge()) {
+            int age = blockState.get(((BlockCrops) block).getAgeProperty());
+            int maxAge = ((BlockCrops) block).getMaxAge();
+            if (age == maxAge) {
                 IBlockState soil = world.getBlockState(pos.down());
                 Block soilBlock = soil.getBlock();
-                if(soilBlock == BlockList.dry_farmland) {
+                if (soilBlock == BlockList.dry_farmland) {
                     world.setBlockState(pos.down(), soil.with(((BlockDryFarmland) soilBlock).getNutrition(), Boolean.valueOf(false)), 1 | 2);
                 }
+            } else if (block != BlockList.weeds) {
+                if (world.getRandom().nextInt(10) == 0) {
+                    event.getWorld().setBlockState(pos, BlockList.weeds.getDefaultState().with(BlockStateProperties.AGE_0_7, (int)Math.floor(((float)age / (float)maxAge) * 7.f)), 1 | 2);
+                }
+            }
+        } else if (block instanceof BlockStem) {
+            if(blockState.get(BlockStateProperties.AGE_0_7) == 7) {
+                IBlockState soil = world.getBlockState(pos.down());
+                Block soilBlock = soil.getBlock();
+                if (soilBlock == BlockList.dry_farmland) {
+                    world.setBlockState(pos.down(), soil.with(((BlockDryFarmland) soilBlock).getNutrition(), Boolean.valueOf(false)), 1 | 2);
+                }
+            }
+        } else if (block instanceof BlockAttachedStem) {
+            IBlockState soil = world.getBlockState(pos.down());
+            Block soilBlock = soil.getBlock();
+            if (soilBlock == BlockList.dry_farmland) {
+                world.setBlockState(pos.down(), soil.with(((BlockDryFarmland) soilBlock).getNutrition(), Boolean.valueOf(false)), 1 | 2);
             }
         }
         event.setResult(Event.Result.DEFAULT);

@@ -1,8 +1,6 @@
 package yamahari.weeds.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockFarmland;
-import net.minecraft.block.IGrowable;
+import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.StateContainer;
@@ -47,7 +45,7 @@ public class BlockDryFarmland extends BlockFarmland implements IGrowable {
 
     @Override
     public boolean canSustainPlant(IBlockState state, IBlockReader world, BlockPos pos, EnumFacing facing, net.minecraftforge.common.IPlantable plantable) {
-        return plantable.getPlantType(world, pos.offset(facing)) == EnumPlantType.Crop;
+        return plantable.getPlantType(world, pos.offset(facing)) == EnumPlantType.Crop || plantable instanceof BlockStem || plantable instanceof BlockAttachedStem;
     }
 
     @Override

@@ -1,4 +1,6 @@
 {
   "block.weeds.dry_farmland": "Dry Farmland",
-  "item.weeds.dry_farmland": "Dry Farmland"
+  "item.weeds.dry_farmland": "Dry Farmland",
+	"item.weeds.weed": "Weed",
+	"block.weeds.weeds": "Weeds"
 }
