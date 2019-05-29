@@ -53,8 +53,8 @@ public class Weeds {
         public static void registerItems(final RegistryEvent.Register<Item> event) {
             logger.info("registerItems");
             event.getRegistry().registerAll(
-                ItemList.weed = new ItemSeeds(BlockList.weeds, new Item.Properties().group(ItemGroup.MATERIALS)).setRegistryName(makeLocation("weed")),
-                ItemList.dry_farmland = new ItemBlock(BlockList.dry_farmland, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(BlockList.dry_farmland.getRegistryName())
+                new ItemSeeds(BlockList.weeds, new Item.Properties().group(ItemGroup.MATERIALS)).setRegistryName(makeLocation("weed")),
+                new ItemBlock(BlockList.dry_farmland, new Item.Properties().group(ItemGroup.DECORATIONS)).setRegistryName(BlockList.dry_farmland.getRegistryName())
             );
         }
 
@@ -62,8 +62,8 @@ public class Weeds {
         public static void registerBlocks(final RegistryEvent.Register<Block> event) {
             logger.info("registerBlocks");
             event.getRegistry().registerAll(
-                BlockList.weeds = new BlockWeeds(Block.Properties.create(Material.PLANTS).sound(SoundType.PLANT).needsRandomTick().doesNotBlockMovement().hardnessAndResistance(0.0f)).setRegistryName(makeLocation("weeds")),
-                BlockList.dry_farmland = new BlockDryFarmland(Block.Properties.create(Material.GROUND).needsRandomTick().hardnessAndResistance(0.6F).sound(SoundType.GROUND)).setRegistryName(makeLocation("dry_farmland"))
+                new BlockWeeds(Block.Properties.create(Material.PLANTS).sound(SoundType.PLANT).needsRandomTick().doesNotBlockMovement().hardnessAndResistance(0.0f)).setRegistryName(makeLocation("weeds")),
+                new BlockDryFarmland(Block.Properties.create(Material.GROUND).needsRandomTick().hardnessAndResistance(0.6F).sound(SoundType.GROUND)).setRegistryName(makeLocation("dry_farmland"))
             );
         }
 
