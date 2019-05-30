@@ -5,17 +5,18 @@ import net.minecraft.block.BlockAttachedStem;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockStem;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.ai.EntityAIEatGrass;
+import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
@@ -26,8 +27,6 @@ import net.minecraftforge.fml.common.Mod;
 import yamahari.weeds.blocks.BlockDryFarmland;
 import yamahari.weeds.entities.ai.EntityAIMakeSoil;
 import yamahari.weeds.lists.BlockList;
-
-import javax.swing.text.html.parser.Entity;
 
 @Mod.EventBusSubscriber
 public class EventHandler {
@@ -75,11 +74,11 @@ public class EventHandler {
                 IBlockState soil = world.getBlockState(pos.down());
                 Block soilBlock = soil.getBlock();
                 if (soilBlock == BlockList.dry_farmland) {
-                    world.setBlockState(pos.down(), soil.with(((BlockDryFarmland) soilBlock).getNutrition(), Boolean.valueOf(false)), 1 | 2);
+                    world.setBlockState(pos.down(), soil.with(((BlockDryFarmland) soilBlock).getNutrition(), Boolean.valueOf(false)), Constants.BlockFlags.DEFAULT);
                 }
             } else if (block != BlockList.weeds) {
                 if (world.getRandom().nextInt(10) == 0) {
-                    event.getWorld().setBlockState(pos, BlockList.weeds.getDefaultState().with(BlockStateProperties.AGE_0_7, (int)Math.floor(((float)age / (float)maxAge) * 7.f)), 1 | 2);
+                    event.getWorld().setBlockState(pos, BlockList.weeds.getDefaultState().with(BlockStateProperties.AGE_0_7, (int)Math.floor(((float)age / (float)maxAge) * 7.f)), Constants.BlockFlags.DEFAULT);
                 }
             }
         } else if (block instanceof BlockStem) {
@@ -87,14 +86,14 @@ public class EventHandler {
                 IBlockState soil = world.getBlockState(pos.down());
                 Block soilBlock = soil.getBlock();
                 if (soilBlock == BlockList.dry_farmland) {
-                    world.setBlockState(pos.down(), soil.with(((BlockDryFarmland) soilBlock).getNutrition(), Boolean.valueOf(false)), 1 | 2);
+                    world.setBlockState(pos.down(), soil.with(((BlockDryFarmland) soilBlock).getNutrition(), Boolean.valueOf(false)), Constants.BlockFlags.DEFAULT);
                 }
             }
         } else if (block instanceof BlockAttachedStem) {
             IBlockState soil = world.getBlockState(pos.down());
             Block soilBlock = soil.getBlock();
             if (soilBlock == BlockList.dry_farmland) {
-                world.setBlockState(pos.down(), soil.with(((BlockDryFarmland) soilBlock).getNutrition(), Boolean.valueOf(false)), 1 | 2);
+                world.setBlockState(pos.down(), soil.with(((BlockDryFarmland) soilBlock).getNutrition(), Boolean.valueOf(false)), Constants.BlockFlags.DEFAULT);
             }
         }
         event.setResult(Event.Result.DEFAULT);
@@ -125,9 +124,13 @@ public class EventHandler {
             event.setResult(Event.Result.ALLOW);
         } else {
             event.setResult(Event.Result.DENY);
-            // event.setCanceled(true);
         }
-        // event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void onFarmlandTrample(final BlockEvent.FarmlandTrampleEvent event) {
+        if(event.getEntity() instanceof EntityPig) event.setCanceled(true);
+        Weeds.logger.error("trampled");
     }
 
     @SubscribeEvent
@@ -135,7 +138,7 @@ public class EventHandler {
         if(!event.getEntity().getEntityWorld().isRemote()) {
             if(event.getEntity() instanceof EntityPig) {
                 EntityPig pig = (EntityPig)event.getEntity();
-                pig.tasks.addTask(8, new EntityAIMakeSoil(pig));
+                pig.tasks.addTask(9, new EntityAIMakeSoil(pig));
             }
         }
     }
