@@ -5,15 +5,18 @@ import net.minecraft.block.BlockAttachedStem;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.block.BlockStem;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -21,7 +24,10 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import yamahari.weeds.blocks.BlockDryFarmland;
+import yamahari.weeds.entities.ai.EntityAIMakeSoil;
 import yamahari.weeds.lists.BlockList;
+
+import javax.swing.text.html.parser.Entity;
 
 @Mod.EventBusSubscriber
 public class EventHandler {
@@ -122,5 +128,15 @@ public class EventHandler {
             // event.setCanceled(true);
         }
         // event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void onEntityJoinWorld(final EntityJoinWorldEvent event) {
+        if(!event.getEntity().getEntityWorld().isRemote()) {
+            if(event.getEntity() instanceof EntityPig) {
+                EntityPig pig = (EntityPig)event.getEntity();
+                pig.tasks.addTask(8, new EntityAIMakeSoil(pig));
+            }
+        }
     }
 }
