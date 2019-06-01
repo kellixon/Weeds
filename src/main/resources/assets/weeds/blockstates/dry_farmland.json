@@ -1,0 +1,20 @@
+{
+  "variants": {
+    "moisture=0,nutrition=false": { "model": "weeds:dry_farmland_no_nutrition" },
+    "moisture=1,nutrition=false": { "model": "weeds:dry_farmland_no_nutrition" },
+    "moisture=2,nutrition=false": { "model": "weeds:dry_farmland_no_nutrition" },
+    "moisture=3,nutrition=false": { "model": "weeds:dry_farmland_no_nutrition" },
+    "moisture=4,nutrition=false": { "model": "weeds:dry_farmland_no_nutrition" },
+    "moisture=5,nutrition=false": { "model": "weeds:dry_farmland_no_nutrition" },
+    "moisture=6,nutrition=false": { "model": "weeds:dry_farmland_no_nutrition" },
+    "moisture=7,nutrition=false": { "model": "weeds:dry_farmland_moist_no_nutrition" },
+    "moisture=0,nutrition=true": { "model": "weeds:dry_farmland_with_nutrition" },
+    "moisture=1,nutrition=true": { "model": "weeds:dry_farmland_with_nutrition" },
+    "moisture=2,nutrition=true": { "model": "weeds:dry_farmland_with_nutrition" },
+    "moisture=3,nutrition=true": { "model": "weeds:dry_farmland_with_nutrition" },
+    "moisture=4,nutrition=true": { "model": "weeds:dry_farmland_with_nutrition" },
+    "moisture=5,nutrition=true": { "model": "weeds:dry_farmland_with_nutrition" },
+    "moisture=6,nutrition=true": { "model": "weeds:dry_farmland_with_nutrition" },
+    "moisture=7,nutrition=true": { "model": "weeds:dry_farmland_moist_with_nutrition" }
+  }
+}
