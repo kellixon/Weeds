@@ -104,7 +104,6 @@ public class EventHandler {
             }
         } else if (block instanceof BlockMelon || block instanceof BlockPumpkin) {
             for(EnumFacing facing : EnumFacing.HORIZONTALS) {
-                Weeds.logger.info(facing.toString());
                 BlockPos pos = blockPos.offset(facing.getOpposite());
                 if(world.getBlockState(pos).getBlock() instanceof BlockStem) {
                     denutrate(world, pos);
