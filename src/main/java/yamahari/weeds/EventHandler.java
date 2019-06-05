@@ -56,28 +56,32 @@ public class EventHandler {
     public static void onUseHoeEvent(final UseHoeEvent event) {
         World world = event.getWorld();
         BlockPos pos = event.getPos();
-        Block block = world.getBlockState(pos).getBlock();
+        IBlockState blockState = world.getBlockState(pos);
+        Block block = blockState.getBlock();
 
-        IBlockState blockState = null;
+        IBlockState state = null;
 
         if(block == Blocks.GRASS || block == Blocks.GRASS_PATH) {
-            blockState = BlockList.dry_farmland.getDefaultState();
+            state = BlockList.dry_farmland.getDefaultState();
         }
         else if(block == Blocks.DIRT) {
             switch (blockState.getValue(BlockDirt.VARIANT))
             {
                 case DIRT:
-                    blockState = BlockList.dry_farmland.getDefaultState();
+                    state = BlockList.dry_farmland.getDefaultState();
                     break;
                 case COARSE_DIRT:
-                    blockState = Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.DIRT);
+                    state = Blocks.DIRT.getDefaultState().withProperty(BlockDirt.VARIANT, BlockDirt.DirtType.DIRT);
+                    break;
+                default:
+                    break;
             }
         }
-        if(blockState != null) {
+        if(state != null) {
             EntityPlayer entityPlayer = event.getEntityPlayer();
             world.playSound(entityPlayer, pos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
             if (!world.isRemote) {
-                world.setBlockState(pos, blockState, 11);
+                world.setBlockState(pos, state, 11);
                 if (entityPlayer != null) {
                     event.getCurrent().damageItem(1, entityPlayer);
                 }
