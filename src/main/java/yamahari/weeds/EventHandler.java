@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import yamahari.weeds.blocks.BlockDryFarmland;
+import yamahari.weeds.config.Configuration;
 import yamahari.weeds.entities.ai.EntityAIMakeSoil;
 import yamahari.weeds.lists.BlockList;
 
@@ -103,7 +104,7 @@ public class EventHandler {
             if(!((IGrowable)block).canGrow(world, blockPos, blockState, false)) {
                 denutrate(world, blockPos);
             }
-            else if(block != BlockList.weeds && world.rand.nextInt(16) == 0) {
+            else if(block != BlockList.weeds && world.rand.nextInt(100) < Configuration.weed_spread_chance) {
                 world.setBlockState(blockPos, BlockList.weeds.getDefaultState(), 1 | 2);
             }
         } else if (block instanceof BlockMelon || block instanceof BlockPumpkin) {
@@ -131,7 +132,7 @@ public class EventHandler {
         Entity entity = event.getEntity();
         if(!entity.getEntityWorld().isRemote) {
             if(entity instanceof EntityPig) {
-                ((EntityPig) entity).tasks.addTask(9, new EntityAIMakeSoil((EntityPig)entity));
+                ((EntityPig) entity).tasks.addTask(7, new EntityAIMakeSoil((EntityPig)entity));
             }
         }
     }

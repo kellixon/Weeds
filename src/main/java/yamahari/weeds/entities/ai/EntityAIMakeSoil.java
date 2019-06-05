@@ -10,6 +10,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import yamahari.weeds.blocks.BlockDryFarmland;
+import yamahari.weeds.config.Configuration;
 import yamahari.weeds.lists.BlockList;
 
 
@@ -28,7 +29,7 @@ public class EntityAIMakeSoil extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        if(this.soilMakerEntity.getRNG().nextInt(this.soilMakerEntity.isChild() ? 50 : 100) == 0) {
+        if(this.soilMakerEntity.getRNG().nextInt(100) < (this.soilMakerEntity.isChild() ? Configuration.pig_child_digging_chance : Configuration.pig_digging_chance)) {
             IBlockState blockState = this.entityWorld.getBlockState(new BlockPos(this.soilMakerEntity.posX, Math.ceil(this.soilMakerEntity.posY), this.soilMakerEntity.posZ).down());
             Block block = blockState.getBlock();
             return block == Blocks.GRASS
@@ -72,13 +73,14 @@ public class EntityAIMakeSoil extends EntityAIBase {
                     this.entityWorld.setBlockState(pos, BlockList.dry_farmland.getDefaultState(), 2);
                 }
                 else if(block == Blocks.DIRT) {
-                    this.entityWorld.playEvent(2001, pos, Block.getIdFromBlock(block));
                     switch (blockState.getValue(BlockDirt.VARIANT))
                     {
                         case DIRT:
+                            this.entityWorld.playEvent(2001, pos, Block.getIdFromBlock(block));
                             this.entityWorld.setBlockState(pos, BlockList.dry_farmland.getDefaultState(), 2);
                             break;
                         case COARSE_DIRT:
+                            this.entityWorld.playEvent(2001, pos, Block.getIdFromBlock(block));
                             this.entityWorld.setBlockState(pos, Blocks.DIRT.getDefaultState(), 2);
                             break;
                         default:
