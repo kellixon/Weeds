@@ -55,10 +55,6 @@ public class EntityAIMakeSoil extends EntityAIBase {
         return this.makingSoilTimer > 0;
     }
 
-    public int getMakingSoilTimer() {
-        return this.makingSoilTimer;
-    }
-
     @Override
     public void updateTask() {
         this.makingSoilTimer = Math.max(0, this.makingSoilTimer - 1);
@@ -87,9 +83,9 @@ public class EntityAIMakeSoil extends EntityAIBase {
                             break;
                     }
                 }
-                else if(block == BlockList.dry_farmland && !blockState.getValue(((BlockDryFarmland) block).getNutrition())) {
+                else if(block == BlockList.dry_farmland && !blockState.getValue(BlockDryFarmland.NUTRITION)) {
                     this.entityWorld.playEvent(2001, pos, Block.getIdFromBlock(block));
-                    this.entityWorld.setBlockState(pos, blockState.withProperty(((BlockDryFarmland) block).getNutrition(), Boolean.valueOf(true)), 2);
+                    this.entityWorld.setBlockState(pos, blockState.withProperty(BlockDryFarmland.NUTRITION, Boolean.valueOf(true)), 2);
                 }
             }
         }
