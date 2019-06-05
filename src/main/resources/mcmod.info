@@ -2,13 +2,13 @@
 {
   "modid": "weeds",
   "name": "Weeds",
-  "description": "Example placeholder mod.",
-  "version": "${version}",
+  "description": "This mod adds weeds that destroy your crops and changes the way farming works.",
+  "version": "1.0",
   "mcversion": "${mcversion}",
   "url": "",
   "updateUrl": "",
   "authorList": ["Yamahari"],
-  "credits": "The Forge and FML guys, for making this example",
+  "credits": "Yamahari and the Forge team",
   "logoFile": "",
   "screenshots": [],
   "dependencies": []

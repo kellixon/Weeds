@@ -1,7 +1,9 @@
 package yamahari.weeds.blocks;
 
-import net.minecraft.block.*;
-import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.BlockFarmland;
+import net.minecraft.block.BlockStem;
+import net.minecraft.block.IGrowable;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -12,7 +14,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.property.Properties;
 
 import java.util.Random;
 

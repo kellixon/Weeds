@@ -5,7 +5,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemSeeds;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -21,8 +20,6 @@ import yamahari.weeds.lists.BlockList;
 import yamahari.weeds.lists.ItemList;
 import yamahari.weeds.proxy.Proxy;
 import yamahari.weeds.util.Reference;
-
-import java.util.Random;
 
 @Mod(modid = Reference.MOD_ID, name = Reference.NAME, acceptedMinecraftVersions = Reference.ACCEPTED_VERSIONS, version = Reference.VERSION)
 public class Weeds {
@@ -57,7 +54,7 @@ public class Weeds {
             logger.info(Reference.MOD_ID + ": onRegisterItems called");
             event.getRegistry().registerAll(
                 new ItemBlock(BlockList.dry_farmland).setRegistryName(BlockList.dry_farmland.getRegistryName()),
-                new ItemSeeds(BlockList.weeds, Blocks.FARMLAND).setRegistryName("weed").setUnlocalizedName("weed")
+                new ItemSeeds(BlockList.weeds, Blocks.FARMLAND).setRegistryName("weed").setUnlocalizedName(makeUnlocalizedName("weed"))
             );
         }
 
@@ -65,8 +62,8 @@ public class Weeds {
         public static void onRegisterBlocks(RegistryEvent.Register<Block> event) {
             logger.info(Reference.MOD_ID + ": onRegisterBlocks called");
             event.getRegistry().registerAll(
-                new BlockDryFarmland().setRegistryName("dry_farmland").setUnlocalizedName("dry_farmland"),
-                new BlockWeeds().setRegistryName("weeds").setUnlocalizedName("weeds")
+                new BlockDryFarmland().setRegistryName("dry_farmland").setUnlocalizedName(makeUnlocalizedName("dry_farmland")),
+                new BlockWeeds().setRegistryName("weeds").setUnlocalizedName(makeUnlocalizedName("weeds"))
             );
         }
 
@@ -76,6 +73,10 @@ public class Weeds {
             Weeds.proxy.registerItemRenderer(ItemList.dry_farmland, 0, "inventory");
             Weeds.proxy.registerItemRenderer(ItemList.weed, 0, "inventory");
             Weeds.proxy.registerItemRenderer(Item.getItemFromBlock(BlockList.dry_farmland), 0, "inventory");
+        }
+
+        private static String makeUnlocalizedName(String name) {
+            return Reference.MOD_ID + "." + name;
         }
     }
 }

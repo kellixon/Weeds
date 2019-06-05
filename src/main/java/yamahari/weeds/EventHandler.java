@@ -1,20 +1,16 @@
 package yamahari.weeds;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockCrops;
-import net.minecraft.block.BlockDirt;
-import net.minecraft.block.BlockStem;
+import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.item.ItemHoe;
-import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
@@ -23,9 +19,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import yamahari.weeds.blocks.BlockDryFarmland;
+import yamahari.weeds.entities.ai.EntityAIMakeSoil;
 import yamahari.weeds.lists.BlockList;
-
-import java.util.Random;
 
 @Mod.EventBusSubscriber
 public class EventHandler {
@@ -51,10 +46,8 @@ public class EventHandler {
         if(block instanceof BlockCrops || block instanceof BlockStem) {
             IBlockState soil = world.getBlockState(pos.down());
             Block soilBlock = soil.getBlock();
-            if(soilBlock == BlockList.dry_farmland) {
-                if(!soil.getValue(((BlockDryFarmland)soilBlock).getNutrition())) {
-                    event.setResult(Event.Result.DENY);
-                }
+            if(soilBlock == BlockList.dry_farmland && !soil.getValue(BlockDryFarmland.NUTRITION)) {
+                event.setResult(Event.Result.DENY);
             }
         }
     }
@@ -71,7 +64,7 @@ public class EventHandler {
             blockState = BlockList.dry_farmland.getDefaultState();
         }
         else if(block == Blocks.DIRT) {
-            switch ((BlockDirt.DirtType)blockState.getValue(BlockDirt.VARIANT))
+            switch (blockState.getValue(BlockDirt.VARIANT))
             {
                 case DIRT:
                     blockState = BlockList.dry_farmland.getDefaultState();
@@ -100,53 +93,43 @@ public class EventHandler {
         World world = event.getWorld();
         IBlockState blockState = event.getState();
         Block block = blockState.getBlock();
-        BlockPos pos = event.getPos();
+        BlockPos blockPos = event.getPos();
 
-        if(block instanceof BlockCrops) {
-            int age = blockState.getValue(((BlockCrops) block).AGE);
-            int maxAge = ((BlockCrops) block).getMaxAge();
-            if (age == maxAge) {
-                IBlockState soil = world.getBlockState(pos.down());
-                Block soilBlock = soil.getBlock();
-                if (soilBlock == BlockList.dry_farmland) {
-                    if(!world.isRemote)
-                        world.setBlockState(pos.down(), soil.withProperty(((BlockDryFarmland) soilBlock).getNutrition(), Boolean.valueOf(false)),1 | 2);
-                }
-            } else if (block != BlockList.weeds) {
-                if (world.rand.nextInt(10) == 0) {
-                    if(!world.isRemote)
-                        world.setBlockState(pos, BlockList.weeds.getDefaultState().withProperty(((BlockCrops) block).AGE, (int)Math.floor(((float)age / (float)maxAge) * 7.f)), 1 | 2);
-                }
+        if(block instanceof BlockCrops || block instanceof BlockStem) {
+            if(!((IGrowable)block).canGrow(world, blockPos, blockState, false)) {
+                denutrate(world, blockPos);
             }
-        } else if (block instanceof BlockStem) {
-            if (blockState.getValue(((BlockStem) block).AGE) == 7) {
-                IBlockState soil = world.getBlockState(pos.down());
-                Block soilBlock = soil.getBlock();
-                if (soilBlock == BlockList.dry_farmland) {
-                    if(!world.isRemote)
-                        world.setBlockState(pos.down(), soil.withProperty(((BlockDryFarmland) soilBlock).getNutrition(), Boolean.valueOf(false)), 1 | 2);
+            else if(block != BlockList.weeds && world.rand.nextInt(16) == 0) {
+                world.setBlockState(blockPos, BlockList.weeds.getDefaultState(), 1 | 2);
+            }
+        } else if (block instanceof BlockMelon || block instanceof BlockPumpkin) {
+            for(EnumFacing facing : EnumFacing.HORIZONTALS) {
+                Weeds.logger.info(facing.toString());
+                BlockPos pos = blockPos.offset(facing.getOpposite());
+                if(world.getBlockState(pos).getBlock() instanceof BlockStem) {
+                    denutrate(world, pos);
+                    break;
                 }
             }
         }
-        event.setResult(Event.Result.ALLOW);
     }
-}
 
-/*
-@Mod.EventBusSubscriber
-public class EventHandler {
-    @SubscribeEvent
-    public static void onFarmlandTrample(final BlockEvent.FarmlandTrampleEvent event) {
-        if(event.getEntity() instanceof EntityPig) event.setCanceled(true);
+    private static void denutrate(World world, BlockPos blockPos) {
+        IBlockState soil = world.getBlockState(blockPos.down());
+        if (soil.getBlock() == BlockList.dry_farmland && soil.getValue(BlockDryFarmland.NUTRITION)) {
+            if (!world.isRemote) {
+                world.setBlockState(blockPos.down(), soil.withProperty(BlockDryFarmland.NUTRITION, Boolean.valueOf(false)), 1 | 2);
+            }
+        }
     }
 
     @SubscribeEvent
     public static void onEntityJoinWorld(final EntityJoinWorldEvent event) {
-        if(!event.getEntity().getEntityWorld().isRemote()) {
-            if(event.getEntity() instanceof EntityPig) {
-                EntityPig pig = (EntityPig)event.getEntity();
-                pig.tasks.addTask(9, new EntityAIMakeSoil(pig));
+        Entity entity = event.getEntity();
+        if(!entity.getEntityWorld().isRemote) {
+            if(entity instanceof EntityPig) {
+                ((EntityPig) entity).tasks.addTask(9, new EntityAIMakeSoil((EntityPig)entity));
             }
         }
     }
-}*/
+}
