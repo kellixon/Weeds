@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "half=bottom,variant=default": { "model": "weeds:half_slab_dried_weed_bale" },
+    "half=top,variant=default": { "model": "weeds:upper_slab_dried_weed_bale" }
+  }
+}

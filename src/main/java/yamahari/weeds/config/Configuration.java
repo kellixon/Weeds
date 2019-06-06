@@ -13,7 +13,6 @@ public class Configuration {
     @Config.RangeDouble(min = 0.0, max = 1.0)
     public static double spread_weed_chance = 0.05;
 
-
     @Config.Name("Pig digging chance [%]")
     @Config.RangeDouble(min = 0.0, max = 1.0)
     public static double pig_digging_chance = 0.01;
@@ -29,4 +28,8 @@ public class Configuration {
     @Config.Name("Pig digging dropchance [%]")
     @Config.RangeDouble(min = 0.0, max = 1.0)
     public static double pig_digging_drop_chance = 0.025;
+
+    @Config.Name("Weed Bale drying chace [%]")
+    @Config.RangeDouble(min = 0.0, max = 1.0)
+    public static double weed_bale_drying_chance = 0.1;
 }

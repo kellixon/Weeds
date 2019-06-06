@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "end": "weeds:block/dried_weed_bale_top",
+    "side": "weeds:block/dried_weed_bale_side"
+  }
+}

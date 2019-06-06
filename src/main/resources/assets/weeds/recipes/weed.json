@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "weeds:weed_bale"
+    }
+  },
+  "result": {
+    "item": "weeds:weed",
+    "count": 9
+  }
+}

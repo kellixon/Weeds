@@ -1,10 +1,15 @@
 package yamahari.weeds;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRotatedPillar;
+import net.minecraft.block.BlockSlab;
+import net.minecraft.block.BlockStairs;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemSeeds;
+import net.minecraft.item.ItemSlab;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.client.event.ModelRegistryEvent;
@@ -16,8 +21,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.Logger;
-import yamahari.weeds.blocks.BlockDryFarmland;
-import yamahari.weeds.blocks.BlockWeeds;
+import yamahari.weeds.blocks.*;
 import yamahari.weeds.lists.BlockList;
 import yamahari.weeds.lists.ItemList;
 import yamahari.weeds.proxy.Proxy;
@@ -56,16 +60,26 @@ public class Weeds {
             logger.info(Reference.MOD_ID + ": onRegisterItems called");
             event.getRegistry().registerAll(
                 new ItemBlock(BlockList.dry_farmland).setRegistryName(BlockList.dry_farmland.getRegistryName()),
-                new ItemSeeds(BlockList.weeds, Blocks.FARMLAND).setRegistryName("weed").setUnlocalizedName(makeUnlocalizedName("weed"))
+                new ItemSeeds(BlockList.weeds, Blocks.FARMLAND).setRegistryName("weed").setUnlocalizedName(makeUnlocalizedName("weed")),
+                new ItemBlock(BlockList.weed_bale).setRegistryName(BlockList.weed_bale.getRegistryName()),
+                new ItemBlock(BlockList.dried_weed_bale).setRegistryName(BlockList.dried_weed_bale.getRegistryName()),
+                new ItemBlock(BlockList.dried_weed_bale_stairs).setRegistryName(BlockList.dried_weed_bale_stairs.getRegistryName()),
+                new ItemSlab(BlockList.dried_weed_bale_slab, ((BlockSlab)BlockList.dried_weed_bale_slab), ((BlockSlab)BlockList.dried_weed_bale_double_slab)).setRegistryName(BlockList.dried_weed_bale_slab.getRegistryName())
             );
         }
 
         @SubscribeEvent
         public static void onRegisterBlocks(RegistryEvent.Register<Block> event) {
             logger.info(Reference.MOD_ID + ": onRegisterBlocks called");
+            Block block = new BlockDriedWeedBale().setRegistryName("dried_weed_bale").setUnlocalizedName(makeUnlocalizedName("dried_weed_bale"));
             event.getRegistry().registerAll(
                 new BlockDryFarmland().setRegistryName("dry_farmland").setUnlocalizedName(makeUnlocalizedName("dry_farmland")),
-                new BlockWeeds().setRegistryName("weeds").setUnlocalizedName(makeUnlocalizedName("weeds"))
+                new BlockWeeds().setRegistryName("weeds").setUnlocalizedName(makeUnlocalizedName("weeds")),
+                new BlockWeedBale().setRegistryName("weed_bale").setUnlocalizedName(makeUnlocalizedName("weed_bale")),
+                block,
+                new BlockDriedWeedBaleStairs(block.getDefaultState()).setRegistryName("dried_weed_bale_stairs").setUnlocalizedName(makeUnlocalizedName("dried_weed_bale_stairs")),
+                (new BlockDriedWeedBaleSlab.Half()).setRegistryName("dried_weed_bale_slab").setUnlocalizedName(makeUnlocalizedName("dried_weed_bale_slab")),
+                (new BlockDriedWeedBaleSlab.Double()).setRegistryName("dried_weed_bale_double_slab").setUnlocalizedName(makeUnlocalizedName("dried_weed_bale_double_slab"))
             );
         }
 
@@ -75,6 +89,10 @@ public class Weeds {
             Weeds.proxy.registerItemRenderer(ItemList.dry_farmland, 0, "inventory");
             Weeds.proxy.registerItemRenderer(ItemList.weed, 0, "inventory");
             Weeds.proxy.registerItemRenderer(Item.getItemFromBlock(BlockList.dry_farmland), 0, "inventory");
+            Weeds.proxy.registerItemRenderer(Item.getItemFromBlock(BlockList.weed_bale), 0, "inventory");
+            Weeds.proxy.registerItemRenderer(Item.getItemFromBlock(BlockList.dried_weed_bale), 0, "inventory");
+            Weeds.proxy.registerItemRenderer(Item.getItemFromBlock(BlockList.dried_weed_bale_stairs), 0, "inventory");
+            Weeds.proxy.registerItemRenderer(Item.getItemFromBlock(BlockList.dried_weed_bale_slab), 0, "inventory");
         }
 
         private static String makeUnlocalizedName(String name) {

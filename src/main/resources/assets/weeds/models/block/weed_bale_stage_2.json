@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "end": "weeds:block/weed_bale_top_stage_2",
+    "side": "weeds:block/weed_bale_side_stage_2"
+  }
+}

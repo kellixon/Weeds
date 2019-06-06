@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "weeds:dried_weed_bale"
+    },
+    "axis=z": {
+      "model": "weeds:dried_weed_bale",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "weeds:dried_weed_bale",
+      "x": 90,
+      "y": 90
+    }
+  }
+}
