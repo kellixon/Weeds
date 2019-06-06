@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern":
+  [
+    "xxx"
+  ],
+  "key":
+  {
+    "x":
+    {
+      "item": "weeds:dried_weed_bale"
+    }
+  },
+  "result":
+  {
+    "item": "weeds:dried_weed_bale_slab",
+    "data": 0,
+    "count": 6
+  }
+}

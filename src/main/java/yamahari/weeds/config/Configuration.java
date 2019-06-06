@@ -7,7 +7,7 @@ import yamahari.weeds.util.Reference;
 public class Configuration {
     @Config.Name("Transforming chance for weeds [%]")
     @Config.RangeDouble(min = 0.0, max = 1.0)
-    public static double transform_to_weed_chance = 0.16;
+    public static double transform_to_weed_chance = 0.08;
 
     @Config.Name("Spreading chance for weeds [%]")
     @Config.RangeDouble(min = 0.0, max = 1.0)
@@ -15,7 +15,7 @@ public class Configuration {
 
     @Config.Name("Pig digging chance [%]")
     @Config.RangeDouble(min = 0.0, max = 1.0)
-    public static double pig_digging_chance = 0.01;
+    public static double pig_digging_chance = 0.001;
 
     @Config.Name("Pig (child) digging chance [%]")
     @Config.RangeDouble(min = 0.0, max = 1.0)

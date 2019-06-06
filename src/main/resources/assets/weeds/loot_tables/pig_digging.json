@@ -13,6 +13,41 @@
           "type": "item",
           "name": "minecraft:gold_nugget",
           "weight": 1
+        },
+        {
+          "type": "item",
+          "name": "minecraft:stick",
+          "weight": 1
+        },
+        {
+          "type": "item",
+          "name": "minecraft:melon_seeds",
+          "weight": 1
+        },
+        {
+          "type": "item",
+          "name": "minecraft:pumpkin_seeds",
+          "weight": 1
+        },
+        {
+          "type": "item",
+          "name": "minecraft:wheat_seeds",
+          "weight": 1
+        },
+        {
+          "type": "item",
+          "name": "minecraft:beetroot_seeds",
+          "weight": 1
+        },
+        {
+          "type": "item",
+          "name": "minecraft:red_mushroom",
+          "weight": 1
+        },
+        {
+          "type": "item",
+          "name": "minecraft:brown_mushroom",
+          "weight": 1
         }
       ]
     }
