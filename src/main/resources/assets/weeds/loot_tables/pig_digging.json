@@ -1,0 +1,20 @@
+{
+  "pools": [
+    {
+      "name": "pig_digging",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "minecraft:iron_nugget",
+          "weight": 1
+        },
+        {
+          "type": "item",
+          "name": "minecraft:gold_nugget",
+          "weight": 1
+        }
+      ]
+    }
+  ]
+}

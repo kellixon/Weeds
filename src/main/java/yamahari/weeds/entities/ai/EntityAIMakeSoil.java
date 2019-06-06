@@ -5,13 +5,23 @@ import net.minecraft.block.BlockDirt;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.event.ForgeEventFactory;
+import yamahari.weeds.Weeds;
 import yamahari.weeds.blocks.BlockDryFarmland;
 import yamahari.weeds.config.Configuration;
 import yamahari.weeds.lists.BlockList;
+import yamahari.weeds.util.Reference;
+
+import java.util.List;
 
 
 public class EntityAIMakeSoil extends EntityAIBase {
@@ -29,7 +39,7 @@ public class EntityAIMakeSoil extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        if(this.soilMakerEntity.getRNG().nextInt(100) < (this.soilMakerEntity.isChild() ? Configuration.pig_child_digging_chance : Configuration.pig_digging_chance)) {
+        if(this.soilMakerEntity.getRNG().nextDouble() < (this.soilMakerEntity.isChild() ? Configuration.pig_child_digging_chance : Configuration.pig_digging_chance)) {
             IBlockState blockState = this.entityWorld.getBlockState(new BlockPos(this.soilMakerEntity.posX, Math.ceil(this.soilMakerEntity.posY), this.soilMakerEntity.posZ).down());
             Block block = blockState.getBlock();
             return block == Blocks.GRASS
@@ -64,28 +74,39 @@ public class EntityAIMakeSoil extends EntityAIBase {
             Block block = blockState.getBlock();
 
             if(ForgeEventFactory.getMobGriefingEvent(this.entityWorld, this.soilMakerEntity)) {
-                if(block == Blocks.GRASS || block == Blocks.GRASS_PATH) {
-                    this.entityWorld.playEvent(2001, pos, Block.getIdFromBlock(block));
-                    this.entityWorld.setBlockState(pos, BlockList.dry_farmland.getDefaultState(), 2);
-                }
-                else if(block == Blocks.DIRT) {
-                    switch (blockState.getValue(BlockDirt.VARIANT))
-                    {
-                        case DIRT:
-                            this.entityWorld.playEvent(2001, pos, Block.getIdFromBlock(block));
-                            this.entityWorld.setBlockState(pos, BlockList.dry_farmland.getDefaultState(), 2);
-                            break;
-                        case COARSE_DIRT:
-                            this.entityWorld.playEvent(2001, pos, Block.getIdFromBlock(block));
-                            this.entityWorld.setBlockState(pos, Blocks.DIRT.getDefaultState(), 2);
-                            break;
-                        default:
-                            break;
+                if(!this.entityWorld.isRemote) {
+                    boolean drop = false;
+                    LootTable lootTable = this.entityWorld.getLootTableManager().getLootTableFromLocation(new ResourceLocation(Reference.MOD_ID + ":pig_digging"));
+                    List<ItemStack> stacks = lootTable.generateLootForPools(this.entityWorld.rand, new LootContext.Builder((WorldServer) this.entityWorld).withLuck(0.f).build());
+
+                    if (block == Blocks.GRASS || block == Blocks.GRASS_PATH) {
+                        this.entityWorld.playEvent(2001, pos, Block.getIdFromBlock(block));
+                        this.entityWorld.setBlockState(pos, BlockList.dry_farmland.getDefaultState(), 2);
+                        drop = true;
+                    } else if (block == Blocks.DIRT) {
+                        switch (blockState.getValue(BlockDirt.VARIANT)) {
+                            case DIRT:
+                                this.entityWorld.playEvent(2001, pos, Block.getIdFromBlock(block));
+                                this.entityWorld.setBlockState(pos, BlockList.dry_farmland.getDefaultState(), 2);
+                                drop = true;
+                                break;
+                            case COARSE_DIRT:
+                                this.entityWorld.playEvent(2001, pos, Block.getIdFromBlock(block));
+                                this.entityWorld.setBlockState(pos, Blocks.DIRT.getDefaultState(), 2);
+                                drop = true;
+                                break;
+                            default:
+                                break;
+                        }
+                    } else if (block == BlockList.dry_farmland && !blockState.getValue(BlockDryFarmland.NUTRITION)) {
+                        this.entityWorld.playEvent(2001, pos, Block.getIdFromBlock(block));
+                        this.entityWorld.setBlockState(pos, blockState.withProperty(BlockDryFarmland.NUTRITION, Boolean.valueOf(true)), 2);
                     }
-                }
-                else if(block == BlockList.dry_farmland && !blockState.getValue(BlockDryFarmland.NUTRITION)) {
-                    this.entityWorld.playEvent(2001, pos, Block.getIdFromBlock(block));
-                    this.entityWorld.setBlockState(pos, blockState.withProperty(BlockDryFarmland.NUTRITION, Boolean.valueOf(true)), 2);
+                    if (drop && this.entityWorld.rand.nextDouble() < (this.soilMakerEntity.isChild() ? Configuration.pig_child_digging_drop_chance : Configuration.pig_digging_drop_chance)) {
+                        for (ItemStack item : stacks) {
+                            this.entityWorld.spawnEntity(new EntityItem(this.entityWorld, pos.getX(), pos.getY() + 1.f, pos.getZ(), item));
+                        }
+                    }
                 }
             }
         }

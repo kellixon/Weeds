@@ -12,6 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
+import yamahari.weeds.config.Configuration;
 import yamahari.weeds.lists.BlockList;
 import yamahari.weeds.lists.ItemList;
 
@@ -42,8 +43,7 @@ public class BlockWeeds extends BlockCrops {
         Block block = blockState.getBlock();
         if(block instanceof BlockCrops || block instanceof BlockStem) {
            if(block != BlockList.weeds && ((IGrowable)block).canGrow(worldIn, offset, blockState, false)) {
-               float f = getGrowthChance(block, worldIn, offset);
-               if(worldIn.rand.nextInt((int)(25.0f / f) + 1) == 0) {
+               if(worldIn.rand.nextDouble() < Configuration.spread_weed_chance) {
                    if(!worldIn.isRemote) {
                        worldIn.setBlockState(offset, BlockList.weeds.getDefaultState(),2);
                    }

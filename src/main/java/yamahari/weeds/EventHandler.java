@@ -11,10 +11,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.config.Config;
+import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -22,6 +25,7 @@ import yamahari.weeds.blocks.BlockDryFarmland;
 import yamahari.weeds.config.Configuration;
 import yamahari.weeds.entities.ai.EntityAIMakeSoil;
 import yamahari.weeds.lists.BlockList;
+import yamahari.weeds.util.Reference;
 
 @Mod.EventBusSubscriber
 public class EventHandler {
@@ -104,7 +108,7 @@ public class EventHandler {
             if(!((IGrowable)block).canGrow(world, blockPos, blockState, false)) {
                 denutrate(world, blockPos);
             }
-            else if(block != BlockList.weeds && world.rand.nextInt(100) < Configuration.weed_spread_chance) {
+            else if(block != BlockList.weeds && world.rand.nextDouble() < Configuration.transform_to_weed_chance) {
                 world.setBlockState(blockPos, BlockList.weeds.getDefaultState(), 1 | 2);
             }
         } else if (block instanceof BlockMelon || block instanceof BlockPumpkin) {
@@ -132,8 +136,16 @@ public class EventHandler {
         Entity entity = event.getEntity();
         if(!entity.getEntityWorld().isRemote) {
             if(entity instanceof EntityPig) {
-                ((EntityPig) entity).tasks.addTask(7, new EntityAIMakeSoil((EntityPig)entity));
+                ((EntityPig) entity).tasks.addTask(9, new EntityAIMakeSoil((EntityPig)entity));
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onConfigChanged(final ConfigChangedEvent.OnConfigChangedEvent event) {
+        Weeds.logger.info(Reference.MOD_ID + " : config changed");
+        if(event.getModID().equals(Reference.MOD_ID)) {
+            ConfigManager.sync(Reference.MOD_ID, Config.Type.INSTANCE);
         }
     }
 }

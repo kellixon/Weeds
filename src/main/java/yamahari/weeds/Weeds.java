@@ -5,6 +5,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemSeeds;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.loot.LootTableList;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -39,7 +41,7 @@ public class Weeds {
 
     @Mod.EventHandler
     public static void onInit(FMLInitializationEvent event) {
-
+        LootTableList.register(new ResourceLocation(Reference.MOD_ID, "pig_digging"));
     }
 
     @Mod.EventHandler
